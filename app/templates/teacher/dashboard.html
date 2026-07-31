@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Teacher Dashboard · Smart SMS{% endblock %}
+{% block page_title %}Teacher Dashboard{% endblock %}
+{% block page_subtitle %}Welcome, {{ teacher.name }}{% endblock %}
+
+{% block nav %}
+<a class="active" href="{{ url_for('teacher.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('teacher.attendance') }}">Mark attendance</a>
+<a href="{{ url_for('teacher.attendance_records') }}">Attendance records</a>
+{% endblock %}
+
+{% block content %}
+<div class="grid-stats">
+  <div class="stat"><div class="label">Assigned subjects</div><div class="value">{{ subjects|length }}</div></div>
+  <div class="stat"><div class="label">Marked today</div><div class="value">{{ today_count }}</div></div>
+  <div class="stat"><div class="label">Department</div><div class="value" style="font-size:1.3rem">{{ teacher.department.code }}</div></div>
+</div>
+
+<section class="panel">
+  <div class="panel-header"><h3>Your subjects</h3></div>
+  {% if subjects %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Code</th><th>Name</th><th>Semester</th><th></th></tr></thead>
+      <tbody>
+        {% for s in subjects %}
+        <tr>
+          <td>{{ s.code }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.semester }}</td>
+          <td><a class="btn btn-primary btn-sm" href="{{ url_for('teacher.attendance', subject_id=s.id) }}">Mark attendance</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">No subjects assigned yet. Ask admin to assign subjects.</div>
+  {% endif %}
+</section>
+{% endblock %}

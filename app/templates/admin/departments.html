@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Departments · Smart SMS{% endblock %}
+{% block page_title %}Departments{% endblock %}
+{% block page_subtitle %}Manage academic departments{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin.students') }}">Students</a>
+<a href="{{ url_for('admin.teachers') }}">Teachers</a>
+<a href="{{ url_for('admin.subjects') }}">Subjects</a>
+<a class="active" href="{{ url_for('admin.departments') }}">Departments</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="panel-header"><h3>Add department</h3></div>
+  <form method="post" class="form-grid">
+    <label>Name<input type="text" name="name" required placeholder="Computer Science & Engineering"></label>
+    <label>Code<input type="text" name="code" required placeholder="CSE"></label>
+    <button class="btn btn-primary" type="submit">Add</button>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="panel-header"><h3>All departments</h3></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Code</th><th>Name</th><th></th></tr></thead>
+      <tbody>
+        {% for d in departments %}
+        <tr>
+          <td>{{ d.code }}</td>
+          <td>{{ d.name }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin.delete_department', dept_id=d.id) }}" onsubmit="return confirm('Delete this department?')">
+              <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="empty">No departments.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

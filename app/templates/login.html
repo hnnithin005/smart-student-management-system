@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Login · Smart SMS{% endblock %}
+{% block body %}
+<div class="login-page">
+  <div class="login-card">
+    <div class="brand-inline">
+      <div class="brand-mark">S</div>
+      <div>
+        <h2>Smart SMS</h2>
+        <p style="margin:0">Sign in to your campus portal</p>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+      <label>
+        Username
+        <input type="text" name="username" required autofocus placeholder="admin">
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" required placeholder="••••••••">
+      </label>
+      <button class="btn btn-primary" type="submit">Sign in</button>
+    </form>
+
+    <div class="hint-box">
+      Demo accounts:<br>
+      Admin <code>admin / admin123</code><br>
+      Teacher <code>teacher1 / teacher123</code><br>
+      Student <code>student1 / student123</code>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} · Smart SMS{% endblock %}
+{% block body %}
+<div class="login-page">
+  <div class="login-card" style="text-align:center">
+    <div class="brand-mark" style="margin:0 auto 1rem">S</div>
+    <h2>{{ code }}</h2>
+    <p>{{ message }}</p>
+    <a class="btn btn-primary" href="{{ url_for('auth.index') }}">Go home</a>
+  </div>
+</div>
+{% endblock %}

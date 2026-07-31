@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <h1>Smart SMS</h1>
+      <p>Student Management</p>
+    </div>
+    <nav class="nav">
+      {% block nav %}{% endblock %}
+    </nav>
+    <div class="sidebar-footer">
+      <strong>{{ session.get('username') }}</strong>
+      {{ session.get('role')|capitalize }}
+      <div style="margin-top:0.7rem">
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('auth.logout') }}" style="color:#fff;border-color:rgba(255,255,255,0.25)">Logout</a>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+        <p class="subtitle">{% block page_subtitle %}{% endblock %}</p>
+      </div>
+      {% block top_actions %}{% endblock %}
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

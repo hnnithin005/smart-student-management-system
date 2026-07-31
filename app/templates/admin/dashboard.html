@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard · Smart SMS{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+{% block page_subtitle %}Overview of campus records and activity{% endblock %}
+
+{% block nav %}
+<a class="active" href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin.students') }}">Students</a>
+<a href="{{ url_for('admin.teachers') }}">Teachers</a>
+<a href="{{ url_for('admin.subjects') }}">Subjects</a>
+<a href="{{ url_for('admin.departments') }}">Departments</a>
+{% endblock %}
+
+{% block content %}
+<div class="grid-stats">
+  <div class="stat"><div class="label">Students</div><div class="value">{{ stats.students }}</div></div>
+  <div class="stat"><div class="label">Teachers</div><div class="value">{{ stats.teachers }}</div></div>
+  <div class="stat"><div class="label">Subjects</div><div class="value">{{ stats.subjects }}</div></div>
+  <div class="stat"><div class="label">Departments</div><div class="value">{{ stats.departments }}</div></div>
+  <div class="stat"><div class="label">Attendance today</div><div class="value">{{ stats.attendance_today }}</div></div>
+</div>
+
+<div class="split-2">
+  <section class="panel">
+    <div class="panel-header"><h3>Recent students</h3></div>
+    {% if recent_students %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Name</th><th>Dept</th><th>Sem</th></tr>
+        </thead>
+        <tbody>
+          {% for s in recent_students %}
+          <tr>
+            <td>{{ s.student_code }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.department.code }}</td>
+            <td>{{ s.semester }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty">No students yet.</div>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <div class="panel-header"><h3>Departments</h3></div>
+    {% if departments %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Code</th><th>Name</th></tr></thead>
+        <tbody>
+          {% for d in departments %}
+          <tr><td>{{ d.code }}</td><td>{{ d.name }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty">Add departments to get started.</div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

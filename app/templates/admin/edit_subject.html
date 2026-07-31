@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Edit Subject · Smart SMS{% endblock %}
+{% block page_title %}Edit subject{% endblock %}
+{% block page_subtitle %}{{ subject.code }} — {{ subject.name }}{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin.students') }}">Students</a>
+<a href="{{ url_for('admin.teachers') }}">Teachers</a>
+<a class="active" href="{{ url_for('admin.subjects') }}">Subjects</a>
+<a href="{{ url_for('admin.departments') }}">Departments</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <form method="post" class="form-grid">
+    <label>Code<input name="code" value="{{ subject.code }}" required></label>
+    <label>Name<input name="name" value="{{ subject.name }}" required></label>
+    <label>Semester
+      <select name="semester" required>
+        {% for i in range(1, 9) %}
+        <option value="{{ i }}" {% if i == subject.semester %}selected{% endif %}>{{ i }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Department
+      <select name="department_id" required>
+        {% for d in departments %}
+        <option value="{{ d.id }}" {% if d.id == subject.department_id %}selected{% endif %}>{{ d.code }} — {{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Assigned teacher
+      <select name="teacher_id">
+        <option value="">Unassigned</option>
+        {% for t in teachers %}
+        <option value="{{ t.id }}" {% if subject.teacher_id == t.id %}selected{% endif %}>{{ t.name }} ({{ t.department.code }})</option>
+        {% endfor %}
+      </select>
+    </label>
+    <div class="actions">
+      <button class="btn btn-primary" type="submit">Save changes</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.subjects') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

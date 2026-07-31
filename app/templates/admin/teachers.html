@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block title %}Teachers · Smart SMS{% endblock %}
+{% block page_title %}Teachers{% endblock %}
+{% block page_subtitle %}Manage teacher accounts and department assignment{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin.students') }}">Students</a>
+<a class="active" href="{{ url_for('admin.teachers') }}">Teachers</a>
+<a href="{{ url_for('admin.subjects') }}">Subjects</a>
+<a href="{{ url_for('admin.departments') }}">Departments</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="panel-header"><h3>Add teacher</h3></div>
+  <form method="post" action="{{ url_for('admin.add_teacher') }}" class="form-grid">
+    <label>Teacher ID<input name="teacher_code" required placeholder="T002"></label>
+    <label>Name<input name="name" required></label>
+    <label>Email<input type="email" name="email" required></label>
+    <label>Department
+      <select name="department_id" required>
+        <option value="">Select</option>
+        {% for d in departments %}
+        <option value="{{ d.id }}">{{ d.code }} — {{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Username<input name="username" required placeholder="teacher2"></label>
+    <label>Password<input name="password" placeholder="teacher123"></label>
+    <button class="btn btn-primary" type="submit">Add teacher</button>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="panel-header"><h3>Teacher list</h3></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Dept</th><th>Email</th><th>Subjects</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for t in teachers %}
+        <tr>
+          <td>{{ t.teacher_code }}</td>
+          <td>{{ t.name }}</td>
+          <td>{{ t.department.code }}</td>
+          <td>{{ t.email }}</td>
+          <td>
+            {% if t.subjects %}
+              {% for s in t.subjects %}<span class="badge badge-muted">{{ s.code }}</span> {% endfor %}
+            {% else %}
+              <span class="badge badge-warn">Unassigned</span>
+            {% endif %}
+          </td>
+          <td class="actions">
+            <a class="btn btn-secondary btn-sm" href="{{ url_for('admin.edit_teacher', teacher_id=t.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('admin.delete_teacher', teacher_id=t.id) }}" onsubmit="return confirm('Delete this teacher?')">
+              <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="empty">No teachers yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}Student Dashboard · Smart SMS{% endblock %}
+{% block page_title %}Student Dashboard{% endblock %}
+{% block page_subtitle %}Hello, {{ student.name }}{% endblock %}
+
+{% block nav %}
+<a class="active" href="{{ url_for('student.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('student.attendance') }}">My attendance</a>
+<a href="{{ url_for('student.profile') }}">Profile</a>
+{% endblock %}
+
+{% block content %}
+<div class="grid-stats">
+  <div class="stat"><div class="label">USN</div><div class="value" style="font-size:1.15rem">{{ student.roll_number }}</div></div>
+  <div class="stat"><div class="label">Department</div><div class="value" style="font-size:1.3rem">{{ student.department.code }}</div></div>
+  <div class="stat"><div class="label">Semester</div><div class="value">{{ student.semester }}</div></div>
+</div>
+
+<section class="panel">
+  <div class="panel-header"><h3>Attendance overview</h3></div>
+  {% if summary %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Subject</th><th>Present</th><th>Absent</th><th>Total</th><th>Percentage</th></tr>
+      </thead>
+      <tbody>
+        {% for row in summary %}
+        <tr>
+          <td>{{ row.subject.code }} — {{ row.subject.name }}</td>
+          <td>{{ row.present }}</td>
+          <td>{{ row.absent }}</td>
+          <td>{{ row.total }}</td>
+          <td>
+            {% if row.percentage is not none %}
+            <div style="display:flex;align-items:center;gap:0.6rem">
+              <div class="pct-bar" style="width:100px"><span style="width:{{ row.percentage }}%"></span></div>
+              <strong>{{ row.percentage }}%</strong>
+            </div>
+            {% else %}
+            <span class="badge badge-muted">No data</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">No subjects found for your department and semester.</div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Edit Student · Smart SMS{% endblock %}
+{% block page_title %}Edit student{% endblock %}
+{% block page_subtitle %}{{ student.name }}{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+<a class="active" href="{{ url_for('admin.students') }}">Students</a>
+<a href="{{ url_for('admin.teachers') }}">Teachers</a>
+<a href="{{ url_for('admin.subjects') }}">Subjects</a>
+<a href="{{ url_for('admin.departments') }}">Departments</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <form method="post" class="form-grid">
+    <label>Student ID<input name="student_code" value="{{ student.student_code }}" required></label>
+    <label>Name<input name="name" value="{{ student.name }}" required></label>
+    <label>Roll / USN<input name="roll_number" value="{{ student.roll_number }}" required></label>
+    <label>Department
+      <select name="department_id" required>
+        {% for d in departments %}
+        <option value="{{ d.id }}" {% if d.id == student.department_id %}selected{% endif %}>{{ d.code }} — {{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Semester
+      <select name="semester" required>
+        {% for i in range(1, 9) %}
+        <option value="{{ i }}" {% if i == student.semester %}selected{% endif %}>{{ i }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Email<input type="email" name="email" value="{{ student.email }}" required></label>
+    <label>Phone<input name="phone" value="{{ student.phone }}" required></label>
+    <div class="actions">
+      <button class="btn btn-primary" type="submit">Save changes</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.students') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

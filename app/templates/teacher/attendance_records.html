@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Attendance Records · Smart SMS{% endblock %}
+{% block page_title %}Attendance records{% endblock %}
+{% block page_subtitle %}Review past attendance for your subjects{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('teacher.dashboard') }}">Dashboard</a>
+<a href="{{ url_for('teacher.attendance') }}">Mark attendance</a>
+<a class="active" href="{{ url_for('teacher.attendance_records') }}">Attendance records</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <form method="get" class="form-grid">
+    <label>Subject
+      <select name="subject_id" required onchange="this.form.submit()">
+        <option value="">Select subject</option>
+        {% for s in subjects %}
+        <option value="{{ s.id }}" {% if selected_subject and selected_subject.id == s.id %}selected{% endif %}>
+          {{ s.code }} — {{ s.name }}
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+  </form>
+</section>
+
+{% if selected_subject %}
+<section class="panel">
+  <div class="panel-header"><h3>{{ selected_subject.code }} history</h3></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>USN</th><th>Student</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.date.isoformat() }}</td>
+          <td>{{ r.student.roll_number }}</td>
+          <td>{{ r.student.name }}</td>
+          <td>
+            {% if r.status == 'present' %}
+            <span class="badge badge-ok">Present</span>
+            {% else %}
+            <span class="badge badge-bad">Absent</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="empty">No records yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

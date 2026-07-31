@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block title %}Mark Attendance · Smart SMS{% endblock %}
+{% block page_title %}Mark attendance{% endblock %}
+{% block page_subtitle %}Record present / absent for your class{% endblock %}
+
+{% block nav %}
+<a href="{{ url_for('teacher.dashboard') }}">Dashboard</a>
+<a class="active" href="{{ url_for('teacher.attendance') }}">Mark attendance</a>
+<a href="{{ url_for('teacher.attendance_records') }}">Attendance records</a>
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <form method="get" class="form-grid">
+    <label>Subject
+      <select name="subject_id" required onchange="this.form.submit()">
+        <option value="">Select subject</option>
+        {% for s in subjects %}
+        <option value="{{ s.id }}" {% if selected_subject and selected_subject.id == s.id %}selected{% endif %}>
+          {{ s.code }} — {{ s.name }} (Sem {{ s.semester }})
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Date
+      <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()">
+    </label>
+  </form>
+</section>
+
+{% if selected_subject %}
+<section class="panel">
+  <div class="panel-header">
+    <h3>{{ selected_subject.code }} · {{ selected_date }}</h3>
+  </div>
+  {% if students %}
+  <form method="post" action="{{ url_for('teacher.save_attendance') }}">
+    <input type="hidden" name="subject_id" value="{{ selected_subject.id }}">
+    <input type="hidden" name="date" value="{{ selected_date }}">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>USN</th><th>Name</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          {% for s in students %}
+          <tr>
+            <td>{{ s.roll_number }}</td>
+            <td>{{ s.name }}</td>
+            <td>
+              <div class="attendance-row">
+                <label>
+                  <input type="radio" name="status_{{ s.id }}" value="present"
+                    {% if existing.get(s.id, 'present') == 'present' %}checked{% endif %}>
+                  Present
+                </label>
+                <label>
+                  <input type="radio" name="status_{{ s.id }}" value="absent"
+                    {% if existing.get(s.id) == 'absent' %}checked{% endif %}>
+                  Absent
+                </label>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:1rem">
+      <button class="btn btn-primary" type="submit">Save attendance</button>
+    </div>
+  </form>
+  {% else %}
+  <div class="empty">No students found for this department and semester.</div>
+  {% endif %}
+</section>
+{% elif subjects %}
+<div class="panel empty">Select a subject to begin marking attendance.</div>
+{% else %}
+<div class="panel empty">No subjects assigned to you.</div>
+{% endif %}
+{% endblock %}
